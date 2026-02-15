@@ -28,6 +28,7 @@ class WhatsAppEncryptingStreamsTest extends TestCase
 
         if ($outText!=$encryptedText) {
             echo 'AUDIO зашифровано неудачно'.PHP_EOL;
+            return false;
         }
         
         
@@ -50,6 +51,7 @@ class WhatsAppEncryptingStreamsTest extends TestCase
 
         if ($outText!=$encryptedText) {
             echo 'IMAGE зашифровано неудачно'.PHP_EOL;
+            return false;
         }
         
         
@@ -74,11 +76,71 @@ class WhatsAppEncryptingStreamsTest extends TestCase
 
         if ($outText!=$encryptedText) {
             echo 'VIDEO зашифровано неудачно'.PHP_EOL;
+            return false;
         }
         if ($sInfo!=$streamingInfo) {
             echo 'Информация для стриминга неверна'.PHP_EOL;
+            return false;
         }
-                                      
+        
+        echo 'Проверка шифрования завершена удачно'.PHP_EOL;
+                
+        $inText = file_get_contents(__DIR__.'/../samples/AUDIO.encrypted');
+        $inKey = file_get_contents(__DIR__.'/../samples/AUDIO.key');
+        $outText = file_get_contents(__DIR__.'/../samples/AUDIO.original');
+       
+
+        $decryptor = new WhatsAppDecryptingStream(
+            Psr7\Utils::streamFor($inText), 
+            $inKey,             
+            'AUDIO'
+        );
+                                    
+        $decryptedText = (string) $decryptor;
+                     
+        if ($outText!=$decryptedText) {
+            echo 'AUDIO расшифровано неудачно'.PHP_EOL;
+            return false;
+        }
+        
+        $inText = file_get_contents(__DIR__.'/../samples/IMAGE.encrypted');
+        $inKey = file_get_contents(__DIR__.'/../samples/IMAGE.key');
+        $outText = file_get_contents(__DIR__.'/../samples/IMAGE.original');
+       
+
+        $decryptor = new WhatsAppDecryptingStream(
+            Psr7\Utils::streamFor($inText), 
+            $inKey,             
+            'IMAGE'
+        );
+                                    
+        $decryptedText = (string) $decryptor;
+                     
+        if ($outText!=$decryptedText) {
+            echo 'IMAGE расшифровано неудачно'.PHP_EOL;
+            return false;
+        }
+        
+        $inText = file_get_contents(__DIR__.'/../samples/VIDEO.encrypted');
+        $inKey = file_get_contents(__DIR__.'/../samples/VIDEO.key');
+        $outText = file_get_contents(__DIR__.'/../samples/VIDEO.original');
+       
+
+        $decryptor = new WhatsAppDecryptingStream(
+            Psr7\Utils::streamFor($inText), 
+            $inKey,             
+            'VIDEO'
+        );
+                                    
+        $decryptedText = (string) $decryptor;
+                     
+        if ($outText!=$decryptedText) {
+            echo 'VIDEO расшифровано неудачно'.PHP_EOL;
+            return false;
+        }
+        
+        echo 'Проверка расшифровки завершена удачно'.PHP_EOL;
+        
         return true;
     }
     
