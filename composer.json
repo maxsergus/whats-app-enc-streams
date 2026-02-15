@@ -13,7 +13,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "tinabanaku22\\WhatsAppEncStreams\\": "src/"
+      "maxsergus\\WhatsAppEncStreams\\": "src/"
     }
   },
   "require": {
